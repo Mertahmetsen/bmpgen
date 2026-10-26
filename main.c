@@ -3,21 +3,12 @@
 #include <raylib.h>
 #include <stdlib.h>
 
-long getFileSize (FILE* f) {
-    if (fseek(f, 0, SEEK_END) != 0) { perror("fseek"); fclose(f); exit(1); }
-    long size = ftell(f);
-    if (size < 0) { perror("ftell"); fclose(f); exit(1); }
-    rewind(f);
-    return size;
-}
+typedef Color Pixel;
 
 const char* scriptFile = "default.script";
 const char* outputFile = "default.bin";
 const char* inputFile = "default.bin";
 int imgl = 640, imgh = 480;
-
-typedef Color Pixel;
-
 static struct cag_option options[] = {
     {
         .identifier = 's',
@@ -27,41 +18,49 @@ static struct cag_option options[] = {
         .description = "Execute script file"
     },
     {
-    .identifier = 'h',
-    .access_letters = "h",
-    .access_name = "help",
-    .description = "Show this help message"
-    },{
-        .identifier = 'o',
-        .access_letters = "oO",
-        .access_name = "out",
-        .value_name = "PATH",
-        .description = "The output file for script execution"
-    }, {
-        .identifier = 'v',
-        .access_letters = "vVwW",
-        .access_name = "view-img",
-        .value_name = "PATH",
-        .description = "Views raw bitmap image"},
-{
-    .identifier = 'l',
-    .access_letters = "lL",
-    .access_name = "length",
-    .value_name = "VALUE",
-    .description = "Length for viewing bitmap image"},
-{
-    .identifier = 'e',
-    .access_letters = "H",
-    .access_name = "height",
-    .value_name = "VALUE",
-    .description = "Height for viewing bitmap image"},
-{
-    .identifier = 'e',
-    .access_letters = "H",
-    .access_name = "height",
-    .value_name = "VALUE",
-    .description = "Height for viewing bitmap image"}
+        .identifier = 'h',
+        .access_letters = "h",
+        .access_name = "help",
+        .description = "Show this help message"
+        },{
+            .identifier = 'o',
+            .access_letters = "oO",
+            .access_name = "out",
+            .value_name = "PATH",
+            .description = "The output file for script execution"
+        }, {
+            .identifier = 'v',
+            .access_letters = "vVwW",
+            .access_name = "view-img",
+            .value_name = "PATH",
+            .description = "Views raw bitmap image"},
+    {
+        .identifier = 'l',
+        .access_letters = "lL",
+        .access_name = "length",
+        .value_name = "VALUE",
+        .description = "Length for viewing bitmap image"},
+    {
+        .identifier = 'e',
+        .access_letters = "H",
+        .access_name = "height",
+        .value_name = "VALUE",
+        .description = "Height for viewing bitmap image"},
+    {
+        .identifier = 'e',
+        .access_letters = "H",
+        .access_name = "height",
+        .value_name = "VALUE",
+        .description = "Height for viewing bitmap image"}
 };
+
+long getFileSize (FILE* f) {
+    if (fseek(f, 0, SEEK_END) != 0) { perror("fseek"); fclose(f); exit(1); }
+    long size = ftell(f);
+    if (size < 0) { perror("ftell"); fclose(f); exit(1); }
+    rewind(f);
+    return size;
+}
 
 void printHelpMsg (void) {
     puts("Usage: bmpgen [options]");
